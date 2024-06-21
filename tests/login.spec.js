@@ -12,6 +12,7 @@ describe("login", function () {
   afterEach(async function () {
     await driver.quit();
   });
+
   it("visit the login url and check that Username, Password inputs and Login button appears", async function () {
     this.timeout(15000);
     await driver.sleep(1000); // Espera implicita, no es necesaria y lo ideal es no usarlas
@@ -55,11 +56,15 @@ describe("login", function () {
 
   it('should fail login when password is not provided and appears an error message "Epic sadface: Password is required"', async () => {
     let pageText = await getPageTest();
+    let getInputValue= await driver.findElement(By.id('user-name')).getAttribute('value');
+    assert.strictEqual(getInputValue, '');
     await driver.findElement(By.id("user-name")).sendKeys("User");
+
     assert(
       !pageText.includes("Epic sadface: Username is required"),
       `El texto "'username is required'" no se encontró en la página`
     );
+
     await driver.findElement(By.id("login-button")).click();
     const error = await driver.wait(
       until.elementLocated(By.css('[data-test="error-button"]')),
@@ -77,3 +82,11 @@ describe("login", function () {
    return await driver.findElement(By.css("body")).getText();
   };
 });
+
+
+const cart_btn = await driver.wait(
+  until.elementLocated(By.css('[data-test="add-to-cart-sauce-labs-bike-light"]')),
+  2000
+);
+
+assert.ok(cart_btn);
